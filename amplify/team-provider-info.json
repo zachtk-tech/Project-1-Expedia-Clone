@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-expediaclone-dev-40748-authRole",
+      "UnauthRoleArn": "arn:aws:iam::387678648398:role/amplify-expediaclone-dev-40748-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::387678648398:role/amplify-expediaclone-dev-40748-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-expediaclone-dev-40748-deployment",
+      "UnauthRoleName": "amplify-expediaclone-dev-40748-unauthRole",
+      "StackName": "amplify-expediaclone-dev-40748",
+      "StackId": "arn:aws:cloudformation:us-east-2:387678648398:stack/amplify-expediaclone-dev-40748/34a36cc0-8d9e-11f0-b46c-0a796e1f5ff7",
+      "AmplifyAppId": "d1zrnqeq6vwq9h"
+    }
+  }
+}
