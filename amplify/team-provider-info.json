@@ -10,6 +10,14 @@
       "StackName": "amplify-expediaclone-dev-40748",
       "StackId": "arn:aws:cloudformation:us-east-2:387678648398:stack/amplify-expediaclone-dev-40748/34a36cc0-8d9e-11f0-b46c-0a796e1f5ff7",
       "AmplifyAppId": "d1zrnqeq6vwq9h"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d1zrnqeq6vwq9h",
+          "type": "manual"
+        }
+      }
     }
   }
 }
