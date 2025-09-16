@@ -1,0 +1,16 @@
+I0916 13:16:33.385003   78208 load.go:31] Reloading schema and connectors...
+I0916 13:16:33.514673   78208 control.go:94] [/emulator/expedia-clone 4064] UpdateResources(): done
+Schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/queries.gql [1801B] example/mutations.gql [1243B] 
+I0916 13:16:33.569845   78208 codegen.go:82] [connector "example" javascriptSdk] Generating sources into "/Users/landonsiegfried/Desktop/projects/329-Project1/Project-1-Expedia-Clone/src/dataconnect-generated"
+I0916 13:16:33.599119   78208 collector.go:107] schema extensions wrote into "/Users/landonsiegfried/Desktop/projects/329-Project1/Project-1-Expedia-Clone/dataconnect/.dataconnect/schema"
+Generated sources: main/mutation.gql [13679B] main/implicit.gql [1261B] main/input.gql [28173B] main/relation.gql [13746B] main/query.gql [5099B] prelude.gql [73251B] 
+I0916 13:16:33.600924   78208 collector.go:107] connector "example" javascriptSdk wrote into "/Users/landonsiegfried/Desktop/projects/329-Project1/Project-1-Expedia-Clone/src/dataconnect-generated"
+Generated sources: esm/index.esm.js [3566B] esm/package.json [17B] README.md [40931B] react/index.d.ts [3961B] react/package.json [460B] react/esm/package.json [17B] react/esm/index.esm.js [3269B] index.cjs.js [4056B] package.json [863B] react/index.cjs.js [3439B] react/README.md [48299B] index.d.ts [8025B] 
+I0916 13:16:33.614684   78208 installsdk.go:55] Package @dataconnect/generated is already installed. Skipping installation
+I0916 13:16:33.614902   78208 load.go:109] Finished reloading
+I0916 13:16:33.621863   78208 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:9099
+I0916 13:16:33.623114   78208 dev.go:102] Listening on address (HTTP + gRPC): [::1]:9099
+I0916 13:16:36.200165   78208 control.go:94] [/emulator/expedia-clone afc7] UpdateResources(): done
+Schema: sources: schema/schema.gql [1992B] 
+Connector "example": sources: example/queries.gql [1801B] example/mutations.gql [1243B] 

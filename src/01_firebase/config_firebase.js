@@ -1,20 +1,28 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// src/01_firebase/config_firebase.js
 
-// Your web app's Firebase configuration
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { connectAuthEmulator } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBlKHCdVfQvMRKQf2B5UqaLfDkwm6T1apo",
-  authDomain: "challo-ghume-fa22c.firebaseapp.com",
-  projectId: "challo-ghume-fa22c",
-  storageBucket: "challo-ghume-fa22c.appspot.com",
-  messagingSenderId: "411994731743",
-  appId: "1:411994731743:web:a02cec85eb6aa66ddbe56a",
-  measurementId: "G-5KYMV9KZ2D"
+  apiKey: "AIzaSyBoErnxPZd7f2jlfI-b5TRr6mnqcLjyBJU",
+  authDomain: "expedia-clone-d0efa.firebaseapp.com",
+  projectId: "expedia-clone-d0efa",
+  storageBucket: "expedia-clone-d0efa.firebasestorage.app",
+  messagingSenderId: "575599355814",
+  appId: "1:575599355814:web:231c2f07d30454e6d3d167",
+  measurementId: "G-CKFXQJCHTQ"
 };
 
 // Initialize Firebase
-const firebase_app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const analytics = getAnalytics(app);
 
-export default firebase_app
+if (window.location.hostname === "localhost") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+}
+
+
+export { app, auth, analytics };

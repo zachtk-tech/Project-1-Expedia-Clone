@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-import firebase_app from "../01_firebase/config_firebase";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "firebase/auth";
+import { auth } from "../01_firebase/config_firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { fetch_users, login_user } from "../Redux/Authantication/auth.action";
 
-const auth = getAuth(firebase_app);
 const state = {
   number: "",
   otp: "",

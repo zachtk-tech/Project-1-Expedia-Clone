@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
-import firebase_app from "../01_firebase/config_firebase";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "firebase/auth";
+import { auth } from "../01_firebase/config_firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { fetch_users, userRigister } from "../Redux/Authantication/auth.action";
 import Navbar from "../Components/Navbar";
 
-const auth = getAuth(firebase_app);
 const state = {
   number: "",
   otp: "",
@@ -36,7 +31,7 @@ export const Register = () => {
     };
   });
 
-  //  check if the user is exist of not
+  // check if the user exists
   for (let i = 0; i <= user.length - 1; i++) {
     if (user[i].number === number) {
       exist = true;
@@ -44,7 +39,7 @@ export const Register = () => {
     }
   }
 
-  //  capture
+  // register user
   const handleRegisterUser = () => {
     let newObj = {
       number,
@@ -57,89 +52,77 @@ export const Register = () => {
     };
     dispatch(userRigister(newObj));
     setCheck(state);
-    window.location = "/login";
+    navigate("/login"); // ✅ better than window.location
   };
-
-  // oonCapture
+  
+  // reCAPTCHA
   function onCapture() {
     window.recaptchaVerifier = new RecaptchaVerifier(
       "recaptcha-container",
       {
         size: "invisible",
-        callback: (response) => {
+        callback: () => {
           handleVerifyNumber();
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          // ...
         },
       },
       auth
     );
   }
 
-  //   Verify button
+  // verify number
   function handleVerifyNumber() {
     document.querySelector("#nextButton").innerText = "Please wait...";
     onCapture();
     const phoneNumber = `+91${number}`;
     const appVerifier = window.recaptchaVerifier;
+
     if (number.length === 10) {
       if (exist) {
         document.querySelector("#loginMesageError").innerHTML =
-          "User Alredy exist";
+          "User Already exists";
         document.querySelector("#loginMesageSuccess").innerHTML = ``;
       } else {
         signInWithPhoneNumber(auth, phoneNumber, appVerifier)
           .then((confirmationResult) => {
-            // SMS sent. Prompt user to type the code from the message, then sign the
-            // user in with confirmationResult.confirm(code).
             window.confirmationResult = confirmationResult;
             setCheck({ ...check, verify: true });
             document.querySelector(
               "#loginMesageSuccess"
-            ).innerHTML = `Otp Send To ${number} !`;
+            ).innerHTML = `Otp sent to ${number} !`;
             document.querySelector("#loginMesageError").innerHTML = "";
             document.querySelector("#nextButton").style.display = "none";
-            // ...
           })
-          .catch((error) => {
-            // Error; SMS not sent
-            // document.querySelector("#nextButton").innerText = 'Server Error'
-            // ...
+          .catch(() => {
+            document.querySelector("#nextButton").innerText = "Server Error";
           });
       }
-      //
     } else {
       document.querySelector("#loginMesageSuccess").innerHTML = ``;
       document.querySelector("#loginMesageError").innerHTML =
-        "Mobile Number is Invalid !";
+        "Mobile Number is Invalid!";
     }
   }
 
-  // if the code is verifyed
+  // verify OTP
   function verifyCode() {
     window.confirmationResult
       .confirm(otp)
-      .then((result) => {
-        // User signed in successfully.
-        const user = result.user;
+      .then(() => {
         setCheck({ ...check, otpVerify: true });
         document.querySelector(
           "#loginMesageSuccess"
-        ).innerHTML = `Verifyed Successful`;
+        ).innerHTML = `Verified Successfully`;
         document.querySelector("#loginMesageError").innerHTML = "";
         document.querySelector("#loginNumber").style.display = "none";
         document.querySelector("#loginOtp").style.display = "none";
-        // ...
       })
-      .catch((error) => {
-        // User couldn't sign in (bad verification code?)
+      .catch(() => {
         document.querySelector("#loginMesageSuccess").innerHTML = ``;
         document.querySelector("#loginMesageError").innerHTML = "Invalid OTP";
-        // ...
       });
   }
 
-  // setting the typed value to the input state
+  // handle input change
   const handleChangeMobile = (e) => {
     let val = e.target.value;
     setCheck({ ...check, [e.target.name]: val });
@@ -147,30 +130,38 @@ export const Register = () => {
 
   useEffect(() => {
     dispatch(fetch_users);
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
       <div className="mainLogin">
         <div id="recaptcha-container"></div>
         <div className="loginBx">
-        <div className="logoImgdivReg"><img className="imglogoReg" src="https://i.postimg.cc/QxksRNkQ/expedio-Logo.jpg':'https://i.postimg.cc/fRx4D7QH/logo3.png" alt="" /></div>
+          <div className="logoImgdivReg">
+            <img
+              className="imglogoReg"
+              src="https://i.postimg.cc/QxksRNkQ/expedio-Logo.jpg"
+              alt="logo"
+            />
+          </div>
 
           <div className="loginHead">
-          <hr /><hr /><hr />
-
+            <hr />
+            <hr />
+            <hr />
             <h1>Register</h1>
           </div>
-          
+
+          {/* Phone number input */}
           <div className="loginInputB" id="loginNumber">
-            <label htmlFor="">Enter Your Number</label>
+            <label>Enter Your Number</label>
             <span>
               <input
                 type="number"
                 readOnly={verify}
                 name="number"
                 value={number}
-                onChange={(e) => handleChangeMobile(e)}
+                onChange={handleChangeMobile}
                 placeholder="Number"
               />
               <button
@@ -182,44 +173,45 @@ export const Register = () => {
               </button>
             </span>
           </div>
-          {verify ? (
+
+          {/* OTP input */}
+          {verify && (
             <div className="loginInputB" id="loginOtp">
-              <label htmlFor="">Enter OTP</label>
+              <label>Enter OTP</label>
               <span>
                 <input
                   type="number"
                   name="otp"
                   value={otp}
-                  onChange={(e) => handleChangeMobile(e)}
+                  onChange={handleChangeMobile}
                 />
                 <button onClick={verifyCode}>Next</button>
               </span>
             </div>
-          ) : (
-            ""
           )}
 
-          {otpVerify ? (
+          {/* Username + Password after OTP */}
+          {otpVerify && (
             <>
               <div className="loginInputB">
-                <label htmlFor="">Enter Your Full name</label>
+                <label>Enter Your Full Name</label>
                 <span>
                   <input
                     type="text"
                     name="user_name"
                     value={user_name}
-                    onChange={(e) => handleChangeMobile(e)}
+                    onChange={handleChangeMobile}
                   />
                 </span>
               </div>
               <div className="loginInputB">
-                <label htmlFor="">Your Password</label>
+                <label>Your Password</label>
                 <span>
                   <input
                     type="password"
                     name="password"
                     value={password}
-                    onChange={(e) => handleChangeMobile(e)}
+                    onChange={handleChangeMobile}
                   />
                 </span>
               </div>
@@ -227,16 +219,25 @@ export const Register = () => {
                 <button onClick={handleRegisterUser}>Continue</button>
               </div>
             </>
-          ) : (
-            ""
           )}
 
-          {isLoading ? <h1>Please wait...</h1> : ""}
+          {isLoading && <h1>Please wait...</h1>}
 
           <div className="loginTerms">
-          <div className="inpChecbx"><input className="inp" type="checkbox" /> <h2>Keep me signed in</h2></div>
-            <p>Selecting this checkbox will keep you signed into your account on this device until you sign out. Do not select this on shared devices.</p>
-            <h6>By signing in, I agree to the Expedia <span> Terms and Conditions</span>, <span>Privacy Statement</span> and <span>Expedia Rewards Terms and Conditions</span>.</h6>
+            <div className="inpChecbx">
+              <input className="inp" type="checkbox" />{" "}
+              <h2>Keep me signed in</h2>
+            </div>
+            <p>
+              Selecting this checkbox will keep you signed into your account on
+              this device until you sign out. Do not select this on shared
+              devices.
+            </p>
+            <h6>
+              By signing in, I agree to the Expedia{" "}
+              <span>Terms and Conditions</span>, <span>Privacy Statement</span>{" "}
+              and <span>Expedia Rewards Terms and Conditions</span>.
+            </h6>
           </div>
           <br />
           <h3 id="loginMesageError"></h3>

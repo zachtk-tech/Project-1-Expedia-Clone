@@ -1,7 +1,15 @@
 {
   "emulators": {
     "dataconnect": {
-      "dataDir": "dataconnect/.dataconnect/pgliteData"
+      "dataDir": "dataconnect/.dataconnect/pgliteData",
+      "port": 5432
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true,
+    "auth": {
+      "port": 9099
     }
   },
   "dataconnect": {
