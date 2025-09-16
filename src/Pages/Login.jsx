@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
 import { auth } from "../01_firebase/config_firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -11,14 +11,17 @@ const initialState = { number: "", otp: "", verify: false };
 export const Login = () => {
   const [check, setCheck] = useState(initialState);
   const dispatch = useDispatch();
-  const { isAuth, user } = useSelector((store) => ({
+  const navigate = useNavigate();
+
+  const { number, otp, verify } = check;
+  const { isAuth, user } = useSelector(store => ({
     isAuth: store.LoginReducer.isAuth,
     user: store.LoginReducer.user,
   }));
 
-  const { number, otp, verify } = check;
-  const exist = user.some(u => u.number === `+91${number}`);
-  const userData = user.find(u => u.number === `+91${number}`);  
+  const cleanedNumber = number.replace(/\D/g, "");
+  const exist = user.some(u => u.number === `+91${cleanedNumber}`);
+  const userData = user.find(u => u.number === `+91${cleanedNumber}`);
 
   useEffect(() => {
     dispatch(fetch_users);
@@ -31,10 +34,16 @@ export const Login = () => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/"); // redirect after successful login
+    }
+  }, [isAuth, navigate]);
+
   const handleChange = (e) => setCheck({ ...check, [e.target.name]: e.target.value });
 
   const handleVerifyNumber = () => {
-    if (number.length !== 10) {
+    if (cleanedNumber.length !== 10) {
       document.querySelector("#loginMesageError").innerText = "Mobile Number is Invalid!";
       return;
     }
@@ -44,17 +53,18 @@ export const Login = () => {
       return;
     }
 
-    const phoneNumber = `+91${number}`;
+    const phoneNumber = `+91${cleanedNumber}`;
     const appVerifier = window.recaptchaVerifier;
+
     signInWithPhoneNumber(auth, phoneNumber, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
         setCheck({ ...check, verify: true });
-        document.querySelector("#loginMesageSuccess").innerText = `OTP sent to ${number}!`;
+        document.querySelector("#loginMesageSuccess").innerText = `OTP sent to ${cleanedNumber}!`;
         document.querySelector("#loginMesageError").innerText = "";
       })
       .catch((err) => {
-        console.error("OTP send error:", err);
+        console.error(err);
         document.querySelector("#loginMesageError").innerText = "Failed to send OTP. Try again.";
       });
   };
@@ -63,7 +73,7 @@ export const Login = () => {
     window.confirmationResult
       .confirm(otp)
       .then(() => {
-        dispatch(login_user(userData));
+        dispatch(login_user(userData)); // should update isAuth
         document.querySelector("#loginMesageSuccess").innerText = "Verified Successfully!";
         document.querySelector("#loginMesageError").innerText = "";
       })
@@ -98,7 +108,11 @@ export const Login = () => {
           </div>
         )}
 
-        <Link to="/register">Don't have an Account</Link>
+        <div className="loginLinks">
+          <Link to="/register">Don't have an Account</Link>
+          <Link to="/admin"> | Admin Login</Link>
+        </div>
+
 
         <h3 id="loginMesageError"></h3>
         <h3 id="loginMesageSuccess"></h3>

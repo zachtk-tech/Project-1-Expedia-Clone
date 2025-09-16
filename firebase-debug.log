@@ -32,3 +32,4 @@
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
 [info] i  To verify the phone number +915151234567, use the code 792181. {"metadata":{"emulator":{"name":"auth"},"message":"To verify the phone number +915151234567, use the code 792181."}}
+[info] i  To verify the phone number +915151234567, use the code 834321. {"metadata":{"emulator":{"name":"auth"},"message":"To verify the phone number +915151234567, use the code 834321."}}
