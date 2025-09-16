@@ -5,9 +5,8 @@ import { auth } from "../01_firebase/config_firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { fetch_users, userRigister } from "../Redux/Authantication/auth.action";
-import Navbar from "../Components/Navbar";
 
-const state = {
+const initialState = {
   number: "",
   otp: "",
   user_name: "",
@@ -17,32 +16,80 @@ const state = {
 };
 
 export const Register = () => {
-  const [check, setCheck] = useState(state);
+  const [check, setCheck] = useState(initialState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let exist = false;
   const { number, otp, verify, otpVerify, user_name, password } = check;
 
-  // store value and getting user to check if the number is exist or not
-  const { user, isLoading } = useSelector((store) => {
-    return {
-      user: store.LoginReducer.user,
-      isLoading: store.LoginReducer.isLoading,
-    };
-  });
+  const { user, isLoading } = useSelector((store) => ({
+    user: store.LoginReducer.user,
+    isLoading: store.LoginReducer.isLoading,
+  }));
 
-  // check if the user exists
-  for (let i = 0; i <= user.length - 1; i++) {
-    if (user[i].number === number) {
-      exist = true;
-      break;
+  let exist = user.some(u => `+91${u.number}` === `+91${number}`);
+
+  // Initialize reCAPTCHA once
+  useEffect(() => {
+    dispatch(fetch_users);
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        { size: "invisible" },
+        auth
+      );
     }
-  }
+  }, [dispatch]);
 
-  // register user
+  const handleChange = (e) => {
+    setCheck({ ...check, [e.target.name]: e.target.value });
+  };
+
+  const handleVerifyNumber = () => {
+    if (number.length !== 10) {
+      document.querySelector("#loginMesageError").innerText = "Mobile Number is Invalid!";
+      return;
+    }
+
+    if (exist) {
+      document.querySelector("#loginMesageError").innerText = "User Already exists";
+      return;
+    }
+
+    document.querySelector("#nextButton").innerText = "Please wait...";
+    const phoneNumber = `+91${number}`;
+    const appVerifier = window.recaptchaVerifier;
+
+    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        setCheck({ ...check, verify: true });
+        document.querySelector("#loginMesageSuccess").innerText = `OTP sent to ${number}!`;
+        document.querySelector("#loginMesageError").innerText = "";
+        document.querySelector("#nextButton").style.display = "none";
+      })
+      .catch((error) => {
+        console.error("OTP send error:", error);
+        document.querySelector("#loginMesageError").innerText = "Failed to send OTP. Try again.";
+        document.querySelector("#nextButton").innerText = "Next";
+      });
+  };
+
+  const verifyCode = () => {
+    window.confirmationResult
+      .confirm(otp)
+      .then(() => {
+        setCheck({ ...check, otpVerify: true });
+        document.querySelector("#loginMesageSuccess").innerText = "Verified Successfully!";
+        document.querySelector("#loginMesageError").innerText = "";
+      })
+      .catch(() => {
+        document.querySelector("#loginMesageError").innerText = "Invalid OTP";
+      });
+  };
+
   const handleRegisterUser = () => {
-    let newObj = {
-      number,
+    const newUser = {
+      number: `+91${number}`,
       user_name,
       password,
       email: "",
@@ -50,200 +97,62 @@ export const Register = () => {
       gender: "",
       marital_status: null,
     };
-    dispatch(userRigister(newObj));
-    setCheck(state);
-    navigate("/login"); // ✅ better than window.location
+    
+    dispatch(userRigister(newUser));
+    setCheck(initialState);
+    navigate("/login");
   };
-  
-  // reCAPTCHA
-  function onCapture() {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: () => {
-          handleVerifyNumber();
-        },
-      },
-      auth
-    );
-  }
-
-  // verify number
-  function handleVerifyNumber() {
-    document.querySelector("#nextButton").innerText = "Please wait...";
-    onCapture();
-    const phoneNumber = `+91${number}`;
-    const appVerifier = window.recaptchaVerifier;
-
-    if (number.length === 10) {
-      if (exist) {
-        document.querySelector("#loginMesageError").innerHTML =
-          "User Already exists";
-        document.querySelector("#loginMesageSuccess").innerHTML = ``;
-      } else {
-        signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-          .then((confirmationResult) => {
-            window.confirmationResult = confirmationResult;
-            setCheck({ ...check, verify: true });
-            document.querySelector(
-              "#loginMesageSuccess"
-            ).innerHTML = `Otp sent to ${number} !`;
-            document.querySelector("#loginMesageError").innerHTML = "";
-            document.querySelector("#nextButton").style.display = "none";
-          })
-          .catch(() => {
-            document.querySelector("#nextButton").innerText = "Server Error";
-          });
-      }
-    } else {
-      document.querySelector("#loginMesageSuccess").innerHTML = ``;
-      document.querySelector("#loginMesageError").innerHTML =
-        "Mobile Number is Invalid!";
-    }
-  }
-
-  // verify OTP
-  function verifyCode() {
-    window.confirmationResult
-      .confirm(otp)
-      .then(() => {
-        setCheck({ ...check, otpVerify: true });
-        document.querySelector(
-          "#loginMesageSuccess"
-        ).innerHTML = `Verified Successfully`;
-        document.querySelector("#loginMesageError").innerHTML = "";
-        document.querySelector("#loginNumber").style.display = "none";
-        document.querySelector("#loginOtp").style.display = "none";
-      })
-      .catch(() => {
-        document.querySelector("#loginMesageSuccess").innerHTML = ``;
-        document.querySelector("#loginMesageError").innerHTML = "Invalid OTP";
-      });
-  }
-
-  // handle input change
-  const handleChangeMobile = (e) => {
-    let val = e.target.value;
-    setCheck({ ...check, [e.target.name]: val });
-  };
-
-  useEffect(() => {
-    dispatch(fetch_users);
-  }, [dispatch]);
 
   return (
-    <>
-      <div className="mainLogin">
-        <div id="recaptcha-container"></div>
-        <div className="loginBx">
-          <div className="logoImgdivReg">
-            <img
-              className="imglogoReg"
-              src="https://i.postimg.cc/QxksRNkQ/expedio-Logo.jpg"
-              alt="logo"
-            />
-          </div>
+    <div className="mainLogin">
+      <div id="recaptcha-container"></div>
+      <div className="loginBx">
+        <div className="logoImgdivReg">
+          <img className="imglogoReg" src="https://i.postimg.cc/QxksRNkQ/expedio-Logo.jpg" alt="logo" />
+        </div>
+        <div className="loginHead"><hr /><hr /><hr /><h1>Register</h1></div>
 
-          <div className="loginHead">
-            <hr />
-            <hr />
-            <hr />
-            <h1>Register</h1>
-          </div>
-
-          {/* Phone number input */}
+        {!verify && (
           <div className="loginInputB" id="loginNumber">
             <label>Enter Your Number</label>
             <span>
-              <input
-                type="number"
-                readOnly={verify}
-                name="number"
-                value={number}
-                onChange={handleChangeMobile}
-                placeholder="Number"
-              />
-              <button
-                disabled={verify}
-                onClick={handleVerifyNumber}
-                id="nextButton"
-              >
-                Next
-              </button>
+              <input type="number" name="number" value={number} onChange={handleChange} placeholder="Number" />
+              <button onClick={handleVerifyNumber} id="nextButton">Next</button>
             </span>
           </div>
+        )}
 
-          {/* OTP input */}
-          {verify && (
-            <div className="loginInputB" id="loginOtp">
-              <label>Enter OTP</label>
-              <span>
-                <input
-                  type="number"
-                  name="otp"
-                  value={otp}
-                  onChange={handleChangeMobile}
-                />
-                <button onClick={verifyCode}>Next</button>
-              </span>
-            </div>
-          )}
-
-          {/* Username + Password after OTP */}
-          {otpVerify && (
-            <>
-              <div className="loginInputB">
-                <label>Enter Your Full Name</label>
-                <span>
-                  <input
-                    type="text"
-                    name="user_name"
-                    value={user_name}
-                    onChange={handleChangeMobile}
-                  />
-                </span>
-              </div>
-              <div className="loginInputB">
-                <label>Your Password</label>
-                <span>
-                  <input
-                    type="password"
-                    name="password"
-                    value={password}
-                    onChange={handleChangeMobile}
-                  />
-                </span>
-              </div>
-              <div className="loginInputB">
-                <button onClick={handleRegisterUser}>Continue</button>
-              </div>
-            </>
-          )}
-
-          {isLoading && <h1>Please wait...</h1>}
-
-          <div className="loginTerms">
-            <div className="inpChecbx">
-              <input className="inp" type="checkbox" />{" "}
-              <h2>Keep me signed in</h2>
-            </div>
-            <p>
-              Selecting this checkbox will keep you signed into your account on
-              this device until you sign out. Do not select this on shared
-              devices.
-            </p>
-            <h6>
-              By signing in, I agree to the Expedia{" "}
-              <span>Terms and Conditions</span>, <span>Privacy Statement</span>{" "}
-              and <span>Expedia Rewards Terms and Conditions</span>.
-            </h6>
+        {verify && !otpVerify && (
+          <div className="loginInputB" id="loginOtp">
+            <label>Enter OTP</label>
+            <span>
+              <input type="number" name="otp" value={otp} onChange={handleChange} />
+              <button onClick={verifyCode}>Verify</button>
+            </span>
           </div>
-          <br />
-          <h3 id="loginMesageError"></h3>
-          <h3 id="loginMesageSuccess"></h3>
-        </div>
+        )}
+
+        {otpVerify && (
+          <>
+            <div className="loginInputB">
+              <label>Enter Your Full Name</label>
+              <span><input type="text" name="user_name" value={user_name} onChange={handleChange} /></span>
+            </div>
+            <div className="loginInputB">
+              <label>Your Password</label>
+              <span><input type="password" name="password" value={password} onChange={handleChange} /></span>
+            </div>
+            <div className="loginInputB">
+              <button onClick={handleRegisterUser}>Continue</button>
+            </div>
+          </>
+        )}
+
+        {isLoading && <h1>Please wait...</h1>}
+
+        <h3 id="loginMesageError"></h3>
+        <h3 id="loginMesageSuccess"></h3>
       </div>
-    </>
+    </div>
   );
 };

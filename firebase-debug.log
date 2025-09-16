@@ -1,20 +1,20 @@
-[debug] [2025-09-16T19:28:22.550Z] ----------------------------------------------------------------------
-[debug] [2025-09-16T19:28:22.556Z] Command:       /Users/landonsiegfried/.nvm/versions/node/v20.18.2/bin/node /Users/landonsiegfried/.nvm/versions/node/v20.18.2/bin/firebase emulators:start --only auth
-[debug] [2025-09-16T19:28:22.556Z] CLI Version:   14.16.0
-[debug] [2025-09-16T19:28:22.556Z] Platform:      darwin
-[debug] [2025-09-16T19:28:22.556Z] Node Version:  v20.18.2
-[debug] [2025-09-16T19:28:22.556Z] Time:          Tue Sep 16 2025 14:28:22 GMT-0500 (Central Daylight Time)
-[debug] [2025-09-16T19:28:22.556Z] ----------------------------------------------------------------------
+[debug] [2025-09-16T22:11:15.784Z] ----------------------------------------------------------------------
+[debug] [2025-09-16T22:11:15.786Z] Command:       /Users/landonsiegfried/.nvm/versions/node/v20.18.2/bin/node /Users/landonsiegfried/.nvm/versions/node/v20.18.2/bin/firebase emulators:start --only auth
+[debug] [2025-09-16T22:11:15.786Z] CLI Version:   14.16.0
+[debug] [2025-09-16T22:11:15.787Z] Platform:      darwin
+[debug] [2025-09-16T22:11:15.787Z] Node Version:  v20.18.2
+[debug] [2025-09-16T22:11:15.787Z] Time:          Tue Sep 16 2025 17:11:15 GMT-0500 (Central Daylight Time)
+[debug] [2025-09-16T22:11:15.787Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-09-16T19:28:22.749Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-09-16T19:28:22.750Z] > authorizing via signed-in user (landonsiegy@gmail.com)
+[debug] [2025-09-16T22:11:15.980Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-16T22:11:15.981Z] > authorizing via signed-in user (landonsiegy@gmail.com)
 [info] i  emulators: Starting emulators: auth {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth"}}
-[debug] [2025-09-16T19:28:22.951Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-09-16T19:28:22.951Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2025-09-16T19:28:22.951Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}]},"metadata":{"message":"assigned listening specs for emulators"}}
-[debug] [2025-09-16T19:28:22.955Z] Emulator locator file path: /var/folders/mt/hcmyntvx0kdblz_65zxff72c0000gn/T/hub-expedia-clone-d0efa.json
-[debug] [2025-09-16T19:28:22.956Z] [hub] writing locator at /var/folders/mt/hcmyntvx0kdblz_65zxff72c0000gn/T/hub-expedia-clone-d0efa.json
-[debug] [2025-09-16T19:28:27.761Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2025-09-16T22:11:16.188Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-09-16T22:11:16.188Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-09-16T22:11:16.189Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-09-16T22:11:16.192Z] Emulator locator file path: /var/folders/mt/hcmyntvx0kdblz_65zxff72c0000gn/T/hub-expedia-clone-d0efa.json
+[debug] [2025-09-16T22:11:16.194Z] [hub] writing locator at /var/folders/mt/hcmyntvx0kdblz_65zxff72c0000gn/T/hub-expedia-clone-d0efa.json
+[debug] [2025-09-16T22:11:20.981Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
 [info] 
 ┌─────────────────────────────────────────────────────────────┐
 │ ✔  All emulators ready! It is now safe to connect your app. │
@@ -31,3 +31,4 @@
 
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
+[info] i  To verify the phone number +915151234567, use the code 792181. {"metadata":{"emulator":{"name":"auth"},"message":"To verify the phone number +915151234567, use the code 792181."}}
