@@ -5,8 +5,7 @@
 <p>
 To run:<br>
 open three different terminals<br>
-cd into project root on all three<br>
-in no particular order:<br>
+cd into project root on all three in no particular order:<br>
 1st terminal: firebase emulators:start --only auth<br>
 2nd terminal: npm start<br>
 3rd terminal: npm run server
