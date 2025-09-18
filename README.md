@@ -1,15 +1,17 @@
 <h1>Chalo Ghume</h1>
 
-<p>This project is a clone of the Expedia website, created by Team of 5 starting with Kumkum (Team Lead), Ashish, Amit, Sagar Balsaraf, and Sarim . The purpose of this project is to showcase our skills and knowledge in HTML, CSS, JavaScript, React, Redux, and Json-Server.
+<p>This project is a clone of the Expedia website, created by Team of 5 starting with Kumkum (Team Lead), Ashish, Amit, Sagar Balsaraf, and Sarim. The purpose of this project is to showcase our skills and knowledge in HTML, CSS, JavaScript, React, Redux, and Json-Server.</p>
 
-To run:
-open three different terminals
-cd into project root on all three
-in no particular order:
-1st terminal: firebase emulators:start --only auth
-2nd terminal: npm start
-3rd terminal: npm run server
 <p>
+To run:<br>
+open three different terminals<br>
+cd into project root on all three<br>
+in no particular order:<br>
+1st terminal: firebase emulators:start --only auth<br>
+2nd terminal: npm start<br>
+3rd terminal: npm run server
+</p>
+
 
 
 <h2>Tech Stack</h2>
